@@ -1,0 +1,5 @@
+
+CommonJS modules
+    ==> require(<moduleName of dependency>)
+
+ES modules

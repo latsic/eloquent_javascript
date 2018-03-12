@@ -1,0 +1,9 @@
+
+higher order functions:
+==> functions which return functions or take a functions as argument
+
+"string".charCodeAt() ==> Code Unit, 1 * UTF16
+"string".codePointAt() ==> Full unicode character
+
+Arrays:
+- forEach, reduce, filter, map, some, findIndex

@@ -1,0 +1,8 @@
+binding, variable:
+==> let, var, const
+
+let a = 1, b = 2;
+
+enviroment:
+==> collection of bindings
+

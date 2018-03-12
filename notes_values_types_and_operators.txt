@@ -1,0 +1,37 @@
+
+strings:
+
+strings with backticks can include 'template literals'
+==> `half of 100 is ${100 / 2}`
+
+
+Unary operators:
+- typeof, !, -
+==> typeof 4.5
+==> typeof "x"
+
+values:
+- number, string, boolean, undefined
+
+- special numbers:
+==> Infinity, -Infinity, NaN
+
+empty values:
+- null, undefined
+
+operators:
+- type coercion
+==> "5" + 1
+
+boolean value:
+==> false == 0 == "" == NaN;
+
+operators with no type coercion:
+- ===, !===
+
+logical operators:
+==> (null || 1) ==> 1
+==> (1 || 2) ==> 1
+==> (null && 1) ==> null
+==> (2 && 1) ==> 1
+- uses short-circuit evaluation

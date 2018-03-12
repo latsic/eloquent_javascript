@@ -1,0 +1,30 @@
+
+function as values:
+==> const square = function(x) {
+
+};
+
+function declaration:
+==> function square(x){
+
+}
+
+arrow functions:
+==> const square = (x) => {
+
+};
+==> const square = x => {
+
+};
+==> const pow = (base, exp) => {
+
+};
+==> const square = x => x * x;
+
+==> const horn = () => {
+    
+}
+
+function pow(base, exp = 2){
+    
+}

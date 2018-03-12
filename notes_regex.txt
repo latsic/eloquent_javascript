@@ -1,0 +1,15 @@
+
+"+" ==> may be repeated more than once.
+"*" ==> may be repeated zero or more times.
+"." ==> Any character except for new line
+
+"^" (inside square brackets) ==> invert, match anything but
+"{1-2}", {4}, {5,} ==> number of repeats
+"?" ==> may occur zero or one times
+"^" ==> matches start of an input string
+"$" ==> matches the end of an input string.
+"\b" ==> word boundary
+
+greedy operators:
+==> (+, *, ?, and {})
+==> non greedy versions: (+?, *?, ??, {}?)

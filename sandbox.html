@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8/">
+        <meta name='viewport'
+        content='width=device-width, initial-scale=1.0, maximum-scale=1.0' />
+        <title>ScriptSandbox</title>
+    </head>
+  <body>
+    <script src="scripts.js"></script>
+    <script>
+        /* let x = 30;
+        console.log("the value of x is", x);
+        console.log(Math.max(2, 4));
+        //////////
+        let s = "";
+        for(let c = 0; c < 7; c++) {
+            console.log(s+="#");
+        }
+        ////////////
+        s = "";
+        while(s.length <= 7) {
+            console.log(s+="#")
+        }
+        
+        for(let i = 1; i <= 100; i++) {
+            
+            let s = "";
+           
+            if(i % 3 == 0) {
+                s = "Fizz";
+            }
+            if(i % 5 == 0) {
+                s += "Buzz";
+            }
+            if(!s) {
+                console.log(i);
+            }
+            else {
+                console.log(s);
+            }
+        }
+        //////////////
+        {
+            let chessBoardLen = 16;
+            let s = "";
+            let n = " ";
+            let p = "#";
+            for(let chessBoardRow = 0; chessBoardRow < chessBoardLen; chessBoardRow++) {
+                for(let chessBoardCol = 0; chessBoardCol < chessBoardLen; chessBoardCol++) {
+                    s += n;
+                    let temp = n;
+                    n = p;
+                    p = temp;  
+                }
+                s += "\n"
+                let temp = n;
+                n = p;
+                p = temp;  
+            }
+            console.log(s);
+        }
+        //////////////
+        {
+            const hummus = function(factor) {
+            const ingredient = function(amount, unit, name) {
+                let ingredientAmount = amount * factor;
+                if (ingredientAmount > 1) {
+                unit += "s";
+                }
+                
+                console.log(`${ingredientAmount} ${unit} ${name}`);
+                
+            };
+            ingredient(1, "can", "chickpeas");
+            ingredient(0.25, "cup", "tahini");
+            ingredient(0.25, "cup", "lemon juice");
+            ingredient(1, "clove", "garlic");
+            ingredient(2, "tablespoon", "olive oil");
+            ingredient(0.5, "teaspoon", "cumin");
+            };
+            hummus(1);
+            console.log("---");
+        } */
+        
+        /* function min(a, b) {
+            return a <= b ? a : b; 
+        }
+        console.log(min(0, -10));
+        
+        function isEven(x) {
+            x = Math.max(x, -x);
+            function minimize(x) {
+                if(x <= 1){
+                    return !x;
+                }
+                return minimize(x - 2);
+            }
+            return minimize(x);
+        }
+        console.log(isEven(4));
+        console.log(isEven(75));
+        console.log(isEven(-16));
+        console.log(isEven(-31));
+        
+        function countBs(someText) {
+            return countChar(someText, "B");
+        }
+
+        function countChar(someText, someChar) {
+            let count = 0;
+            for(i = 0; i < someText.length; ++i)
+            {
+                if(someText[i] == someChar) count++;
+            }
+            return count;
+        }
+        console.log(countBs("BBC"));
+        console.log(countChar("kakkerlak", "k")); */
+
+   
+        //let jsonEntry = JSON.stringify({name: "patrik", age: 40});
+        //console.log(jsonEntry);
+        //console.log(JSON.parse(jsonEntry).age);
+        
+        /* function range(start, end, step = 1) {
+            let myRange = [];
+
+
+            for(i = start; i <= end; i+=step)
+            {
+                myRange.push(i);
+            }
+            return myRange;
+        }
+        
+        const sum = (range) => {
+            let mysum = 0;
+            for(let val of range) {
+                mysum += val;
+            }
+            return mysum;
+        }
+        console.log(sum(range(1, 10))); */
+        
+       /*  const reverseArray = (someArray) => {
+            let newArray = [];
+            for(let elem of someArray) {
+                newArray.unshift(elem);
+            }
+            return newArray;
+        };
+        console.log(reverseArray(["A", "B", "C"]));
+        
+        let reverseArrayInPlace = function(someArray) {
+            
+            for(let i = 1; i <= someArray.length / 2; ++i) {
+                let temp = someArray[i - 1];
+                someArray[i - 1] = someArray[someArray.length - i]
+                someArray[someArray.length - i] = temp;
+            }
+        };
+        let arrayValue = [1, 2, 3, 4, 5];
+        reverseArrayInPlace(arrayValue);
+        console.log(arrayValue); */
+        
+ /*        function arrayToList(someArray) {
+            
+            let someList = null;            
+            
+            for(let i = someArray.length - 1; i >= 0; i--)
+            {
+                someList = {value: someArray[i], rest: someList};
+            }
+            return someList;
+        }
+        console.log(arrayToList([10, 20, 30]));
+        function arrayToList2(someArray) {
+
+            someList = null;
+            listRoot = null;
+            
+            let i = 0;
+            for(let elem of someArray) {
+                
+                if(i == 0) {
+                    listRoot = {value: elem, rest: null};
+                    someList = listRoot;
+                }
+                else {
+                    someList.rest = {value: elem, rest: null};
+                    someList = someList.rest;
+                }
+                i++;
+            }
+            return listRoot;
+        }
+
+        console.log(arrayToList2([10, 20, 30]));
+        
+        function listToArray(someList) {
+
+            let someArray = [];
+            while(someList != null)
+            {
+                someArray.push(someList.value);
+                someList = someList.rest;
+            }
+            return someArray;
+        }
+        console.log(listToArray(arrayToList([10, 20, 30])));
+
+        function prepend(number, someList) {
+
+            let someElem = {value: number, rest: someList}
+            return someElem;
+        }
+        console.log(prepend(20, null));
+        console.log(prepend(10, prepend(20, null)));
+        
+        function nth(someList, someNumber) {
+
+            if(!someList) return undefined;
+            else if(someNumber == 0) return someList.value;
+            else return nth(someList.rest, someNumber - 1);
+        }
+        console.log(nth(arrayToList([10, 20, 30]), 1));
+        
+        function deepEqual(item1, item2) {
+
+            if(item1 == null && item2 != null) return false;
+            if(item1 != null && item2 == null) return false;
+
+            if(typeof item1 != typeof item2) return false;
+            
+            if(typeof item1 != "object" && typeof item2 != "object") {
+                return item1 === item2;
+            }
+            
+            if(Object.keys(item1).length != Object.keys(item2).length) return false;
+
+            let keysItem1 = Object.keys(item1);
+            let keysItem2 = Object.keys(item2);
+
+            for(let prop of keysItem1) {
+                if(keysItem2.includes(prop)) {
+                    if(!deepEqual(item1[prop], item2[prop])) {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+
+            
+            
+        }
+        let obj = {here: {is: "an"}, object: 2};
+        console.log(deepEqual(obj, obj));
+        // → true
+        console.log(deepEqual(obj, {here: 1, object: 2}));
+        // → false
+        console.log(deepEqual(obj, {here: {is: "an"}, object: 2})); */
+
+        // function repeat(n, action) {
+        //     for(let i = 0; i < n; i++) {
+        //         action(i);
+        //     }
+        // }
+        
+        // let labels = [];
+        // repeat(3, j => labels.push(`Unit ${j + 1}`));
+        // console.log(labels);
+        
+        // function smallerThan(m) {
+        //     return n => n < m;
+        // }
+        // let smallerThan10 = smallerThan(10);
+        // console.log(smallerThan10(9));
+        // console.log(smallerThan10(11));
+        
+        // function unless(test, then, other) {
+        //     if(!test) then();
+        //     else other();
+        // }
+
+        // repeat(3, n => {
+        //     unless(
+        //         n % 2 == 1,
+        //         () => {
+        //             console.log(n, "is even");
+        //         },
+        //         () => {
+        //             console.log(`${n} is uneven`);
+        //         }
+        //     );
+        // });
+        
+        // ["2", "3", "5"].forEach((s, i, a) => console.log(s, a[i]));
+
+        // function filter(array, test) {
+        //     let passed = [];
+        //     for(let elem of array) {
+        //         if(test(elem)) {
+        //             passed.push(elem);
+        //         }
+        //     }
+        //     return passed;
+        // }
+        // console.log(filter(SCRIPTS, script => script.living));
+
+        // console.log(SCRIPTS.filter(script => script.direction == "ttb"));
+
+
+        // function reduce(array, combine, start) {
+        //     let current = start;
+        //     for (let element of array) {
+        //         current = combine(current, element);
+        //     }
+        //     return current;
+        // }
+        // console.log(reduce([1, 2, 3, 4], (a, b) => a + b, 0));
+        
+        // console.log([1, 2, 3, 4].reduce((a, b) => a + b));
+        
+        //console.log(SCRIPTS.count);
+
+        // function characterCount(script) {
+        //     return script.ranges.reduce((count, [from, to]) => {
+        //         return count + (to - from);
+        //     }, 0);
+        // }
+
+        // console.log(SCRIPTS.reduce((a, b) => {
+        //     return characterCount(a) < characterCount(b) ? b : a;
+        // }));
+
+        // function characterCount1(script) {
+        //     return script.ranges.reduce((count, [from, to]) => {
+        //         return count + (to - from);
+        //     }, 0);
+        // }
+        
+        // console.log(SCRIPTS.reduce((a, b) => {
+        //     return characterCount1(a) < characterCount1(b) ? b : a;
+        // }));
+
+        // function getMostCharacters(scripts) {
+        //     return scripts.reduce(
+        //                 (current, next) => {
+        //                     return characterCount1(current) > characterCount1(next)
+        //                         ? current
+        //                         : next;
+        //                 });
+        // }
+        // console.log(getMostCharacters(SCRIPTS));
+
+        function characterScript(code) {
+            for(let script of SCRIPTS) {
+                if(script.ranges.some(([from, to]) => {
+                    return code >= from && code < to;
+                })) {
+                    return script;
+                }
+            }
+            return null;
+        }
+        //let script = characterScript(2021);
+        //console.log(script ? script : "None");
+        
+        // function stringToBytes(str) {
+        //     var bytes = [];
+        //     for(var i = 0, n = str.length; i < n; i++) {
+        //         var char = str.charCodeAt(i);
+        //         bytes.push(char >>> 8, char & 0xFF);
+        //     }
+        //     return bytes;
+        // }
+        
+        function countBy(items, groupName) {
+            let counts = [];
+            for(let item of items) {
+                let name = groupName(item);
+                let known = counts.findIndex(c => c.name == name);
+                if(known == -1) {
+                    counts.push({name: name, count: 1});
+                }
+                else {
+                    counts[known].count++;
+                }
+            }
+            return counts;
+        }
+        // console.log(countBy([1, 2, 3, 4, 5], n => n > 2));
+
+        // function textScripts(text) {
+        //     let scripts = countBy(text, char => {
+        //         let script = characterScript(char.codePointAt(0));
+        //         return script ? script.name : "none";
+        //     }).filter((script) => script.name != "none");
+        
+        //     let total = scripts.reduce((current, next) => {return current + next.count;}, 0);
+        //     //let total = scripts.reduce((n, {count}) => n + count, 0);
+        //     if(total == 0) return "No scripts found";
+
+        //     return scripts.map(({name, count}) => {
+        //         return `${Math.round(count * 100 / total)}% ${name}`;
+        //     }).join(", ");
+        // }
+        // console.log(textScripts('英国的狗说woof, 俄罗斯的狗说тяв'));
+        // console.log(textScripts('"a""'));
+        
+        // function flatten(array2d) {
+        //     return array2d.reduce((arrayFlattened, array2) => {
+        //         return arrayFlattened.concat(array2);
+        //     });
+        // }
+        // let arrays = [[1, 2, 3], [4, 5], [6]];
+        // console.log(flatten(arrays));
+        
+        // function loop(value, test, update, body) {
+
+        //     for(let i = value;;) {
+        //         if(!test(i)) break;
+        //         body(i);
+        //         i = update(i);
+        //     }
+        // }
+        // loop(3, n => n > 0, n => n - 1, console.log);
+
+        // function every(array, test) {
+        //     for(let i of array) {
+        //         if(!test(i)) return false;
+        //     }
+        //     return true;
+        // }
+        // function everyWithSome(array, test) {
+        //     return !array.some(elem => !test(elem));
+        // }
+        // console.log(every([1, 3, 5], n => n < 10));
+        // console.log(every([2, 4, 16], n => n < 10));
+        // console.log(every([], n => n < 10));
+        // console.log(everyWithSome([1, 3, 5], n => n < 10));
+        // console.log(everyWithSome([2, 4, 16], n => n < 10));
+        // console.log(everyWithSome([], n => n < 10));
+        
+        // function dominantDirection(text) {
+        
+        //     let count =  countBy(text, c => {
+        //                     let script = characterScript(c.codePointAt(0));
+        //                     return script ? script.direction : "none";});
+        //     if(count.length == 0) {
+        //         return "invalid text given";
+        //     }
+        //     return count.reduce((current, next) =>{
+        //             return current.count > next.count ? current : next;}, 0).name;
+        // }
+        
+        // console.log(dominantDirection(""));
+        // console.log(dominantDirection("$"));
+        // console.log(dominantDirection("Hello!"));
+        // // → ltr
+        // console.log(dominantDirection("Hey, مساء الخير"));
+        // // → rtl
+        
+        
+
+    </script>
+    <script>
+        // function speak(line) {
+        //     console.log(`The ${this.type} rabbit says '${line}'`);
+        // }
+        
+        // let whiteRabbit = {
+        //     type: "white",
+        //     speak
+        // };
+        // speak.call(whiteRabbit, "aba");
+
+        // whiteRabbit.speak("aha");
+
+        // let protoRabbit = {
+        //     speak(line) {
+        //         console.log(`The ${this.type} rabbit says '${line}'`);
+        //     }
+        // }
+        // protoRabbit.speak("aca");
+
+        // let killerRabbit = Object.create(protoRabbit);
+        // killerRabbit.speak("aka");
+        // killerRabbit.type = "killer";
+        // killerRabbit.speak("SKREEEE!");
+        // protoRabbit.speak("aca");
+
+        // function makeRabbit(type) {
+        //     let rabbit = Object.create(protoRabbit);
+        //     rabbit.type = type;
+        //     return rabbit;
+        // }
+
+        // function Rabbit(type) {
+        //     this.type = type;
+        // }
+        // Rabbit.prototype.speak = function(line) {
+        //     console.log(`The ${this.type} rabbit says '${line}'`);
+        // };
+
+        // let weirdRabbit = new Rabbit("weird");
+
+        // class Rabbit {
+        //     constructor(type) {
+        //         this.type = type;
+        //     }
+        //     speak(line) {
+        //         console.log(`The ${this.type} rabbit says '${line}'`);
+        //     }
+        // }
+        // let killerRabbit = new Rabbit("killer");
+        // let blackRabbit = new Rabbit("black");
+        
+        // let ages = {
+        //     Boris: 39,
+        //     Liang: 22,
+        //     Júlia: 62
+        // };
+       
+        // class Rabbit {
+        //     constructor(type) {
+        //         this.type = type;
+        //     }
+        //     speak(line) {
+        //         console.log(`The ${this.type} rabbit says '${line}'`);
+        //     }
+        // }
+
+        // let someRabbit = new Rabbit("someRabbit");
+        // console.log(someRabbit.toString());
+
+        // Rabbit.prototype.toString = function() {
+        //     return `This is a ${this.type}`
+        // }
+        // console.log(someRabbit.toString());
+
+        // let okIterator = "OK";
+        // console.log(typeof okIterator);
+        // console.log(okIterator);
+        
+        // class Matrix {
+        //     constructor(width, height, content = (x, y) => undefined) {
+        //         this.width = width;
+        //         this.height = height;
+        //         this.content = [];
+
+        //         for (let y = 0; y < height; y++) {
+        //             for (let x = 0; x < width; x++) {
+        //                 this.content[y * width + x] = content(x, y);
+        //             }
+        //         }
+        //     }
+        //     get(x, y) {
+        //         return this.content[y * this.width + x];
+        //     }
+        //     set(x, y, value) {
+        //         this.content[y * this.width + x] = value;
+        //     }
+
+        //     [Symbol.iterator]() {
+        //         return new MatrixIterator(this);
+        //     }
+        // }
+        
+        // class MatrixIterator {
+        //     constructor(matrix) {
+        //         this.x = 0;
+        //         this.y = 0;
+        //         this.matrix = matrix;
+        //     }
+
+        //     next() {
+        //         if (this.y == this.matrix.height) return {done: true};
+
+        //         let value = {x: this.x,
+        //                      y: this.y,
+        //                      value: this.matrix.get(this.x, this.y)};
+        //         this.x++;
+        //         if (this.x == this.matrix.width) {
+        //             this.x = 0;
+        //             this.y++;
+        //         }
+        //         return {value, done: false};
+        //     }
+        // }
+
+        // let matrix = new Matrix(2, 2, (x, y) => -1);
+        // for(let {x, y, value} of matrix) {
+        //     console.log(x, y, value);
+        // }
+
+        // class Vec {
+        //     constructor(x, y) {
+        //         this.x = x;
+        //         this.y = y;
+        //     }
+
+        //     plus(vec) {
+        //         return new Vec(this.x + vec.x, this.y + vec.y);
+        //     }
+        //     minus(vec) {
+        //         return new Vec(this.x - vec.x, this.y - vec.y);
+        //     }
+
+        //     get length() {
+        //         return Math.sqrt(this.x * this.x + this.y * this.y);
+        //     }
+        // }
+
+        // console.log(new Vec(1, 2).plus(new Vec(2, 3)));
+        // // → Vec{x: 3, y: 5}
+        // console.log(new Vec(1, 2).minus(new Vec(2, 3)));
+        // // → Vec{x: -1, y: -1}
+        // console.log(new Vec(3, 4).length);
+        
+        // class Group {
+            
+        //     constructor(){
+        //         this.group = [];
+        //     }
+        //     add(value){
+        //         if(this.has(value)) return;
+        //         this.group.push(value);
+
+        //     }
+        //     delete(value){
+        //         let i = this.group.indexOf(value);
+        //         if(i != -1){
+        //             this.group.splice(i, 1, 0);
+        //         }
+        //     }
+        //     has(value){
+        //         return this.group.indexOf(value) != -1;
+        //     }
+        //     static from(iterateable){
+        //         let g = new Group();
+        //         for(let a of iterateable) {
+        //             g.add(a);
+        //         }
+        //         return g;
+        //     }
+        //     [Symbol.iterator](){
+        //         return new GroupIterator(this, this.group.length);
+        //     }
+        //     value(i){
+        //         return this.group[i];
+        //     }
+        // }
+        
+        // let group = Group.from([10, 20]);
+        // console.log(group.has(10));
+        // // → true
+        // console.log(group.has(30));
+        // // → false
+        // group.add(10);
+        // group.delete(10);
+        // console.log(group.has(10));
+        // // → false
+
+        // class GroupIterator{
+        //     constructor(group, len){
+        //         this.group = group;
+        //         this.pos = 0;
+        //         this.length = len;
+        //     }
+
+        //     next(){
+        //         if(this.pos == this.length){
+        //             return {done: true};
+        //         }
+                
+        //         let val = {
+        //             done: false,
+        //             value: this.group.value(this.pos)
+        //         };
+        //         this.pos++;
+        //         return val;
+        //     }
+        // }
+        
+        // for (let value of Group.from(["a", "b", "c"])) {
+        //     console.log(value);
+        // }
+        
+        // let map = {one: true, two: true, hasOwnProperty: true};
+
+        // // Fix this call
+        // console.log(Object.getPrototypeOf(map).hasOwnProperty("one"));
+
+        // console.log(hasOwnProperty.call(map, "osne"));
+
+        // // → true
+        
+        // const roads = [
+        //     "Alice's House-Bob's House",   "Alice's House-Cabin",
+        //     "Alice's House-Post Office",   "Bob's House-Town Hall",
+        //     "Daria's House-Ernie's House", "Daria's House-Town Hall",
+        //     "Ernie's House-Grete's House", "Grete's House-Farm",
+        //     "Grete's House-Shop",          "Marketplace-Farm",
+        //     "Marketplace-Post Office",     "Marketplace-Shop",
+        //     "Marketplace-Town Hall",       "Shop-Town Hall"
+        //     ];
+        
+        // function buildGraph(edges) {
+        //     let graph = Object.create(null);
+        //     function addEdge(from, to) {
+        //         if (graph[from] == null) {
+        //             graph[from] = [to];
+        //         }
+        //         else {
+        //             graph[from].push(to);
+        //         }
+        //     }
+        //     for (let [from, to] of edges.map(r => r.split("-"))) {
+        //         addEdge(from, to);
+        //         addEdge(to, from);
+        //     }
+        //     return graph;
+        // }
+
+        // const roadGraph = buildGraph(roads);
+
+        // class VillageState {
+        //     constructor(robotPlace, parcels) {
+        //         this.robotPlace = robotPlace;
+        //         this.parcels = parcels;
+        //     }
+
+        //     move(destination) {
+               
+        //         if(!roadGraph[this.robotPlace].includes(destination)) {
+        //             return this;
+        //         }
+        //         else {
+        //             let parcels = this.parcels.map(parcel => {
+        //                 if(parcel.place != this.robotPlace) return parcel;
+        //                 return {place: destination, address: parcel.address};
+        //             }).filter(parcel => parcel.place != parcel.address);
+        //             return new VillageState(destination, parcels);
+        //         }
+        //     }
+        // }
+
+        // let first = new VillageState(
+        //     "Post Office",
+        //     [{place: "Post Office", address: "Alice's House"}]
+        // );
+        
+        // console.log(first.robotPlace);
+        // console.log(first.parcels);
+        // let next = first.move("Alice's House");
+
+        // console.log(next.robotPlace);
+        // // → Alice's House
+        // console.log(next.parcels);
+        // // → []
+        // console.log(first.robotPlace);
+        // // → Post Office
+        
+        // function runRobot(villageState, robot, memory) {
+            
+        //     console.log(villageState);
+
+        //     for(let turn = 0;; turn++){
+
+        //         if (villageState.parcels.length == 0) {
+        //             console.log(`Done in ${turn} turns`);
+        //             break;
+        //         }
+
+        //         let action = robot(villageState, memory);
+        //         villageState = villageState.move(action.direction);
+        //         memory = action.memory;
+        //         console.log(`Moved to ${action.direction}`);
+        //     }
+        // }
+        
+        // function randomPick(array) {
+        //     let choice = Math.floor(Math.random() * array.length);
+        //     return array[choice];
+        // }
+        // function randomRobot(villageState) {
+
+        //     return {
+        //         direction: randomPick(roadGraph[villageState.robotPlace])
+        //     };
+        // }
+        
+        // VillageState.random = function(parcelCount = 5) {
+        //     let parcels = [];
+        //     for (let i = 0; i < parcelCount; i++) {
+        //         let address = randomPick(Object.keys(roadGraph));
+        //         let place;
+        //         do {
+        //             place = randomPick(Object.keys(roadGraph));
+        //         } while(place == address);
+        //         parcels.push({place, address});
+        //     }
+        //     return new VillageState("Post Office", parcels);
+        // };
+        
+        // runRobot(VillageState.random(), randomRobot);
+        
+        // const mailRoute = [
+        //     "Alice's House", "Cabin", "Alice's House", "Bob's House",
+        //     "Town Hall", "Daria's House", "Ernie's House",
+        //     "Grete's House", "Shop", "Grete's House", "Farm",
+        //     "Marketplace", "Post Office"
+        // ];
+
+        // function routeRobot(villageState, memory) {
+        //     if (memory.length == 0) {
+        //         memory = mailRoute;
+        //     }
+        //     return {
+        //         direction: memory[0],
+        //         memory: memory.slice(1)
+        //     };
+        // }
+
+        // runRobot(VillageState.random(), routeRobot, mailRoute);
+        
+
+        // function findRoute(graph, from, to) {
+
+        //     // Array of places which should be explored next.
+        //     let work = [{at: from, route: []}];
+            
+
+        //     for (let i = 0; i < work.length; i++) {
+                
+        //         let {at, route} = work[i];
+                
+        //         for (let place of graph[at]) {
+
+        //             if (place == to) {
+        //                 return route.concat(place);
+        //             }
+        //             if (!work.some(w => w.at == place)) {
+        //                 work.push({at: place, route: route.concat(place)});
+        //             }
+        //         }
+        //     }
+        // }
+        
+        // class PGroup {
+        //     constructor(members) {
+        //         this.members = members;
+        //     }
+
+        //     add(value) {
+        //         if (this.has(value)) return this;
+        //         return new PGroup(this.members.concat([value]));
+        //     }
+
+        //     delete(value) {
+        //         if (!this.has(value)) return this;
+        //         return new PGroup(this.members.filter(m => m !== value));
+        //     }
+
+        //     has(value) {
+        //         return this.members.includes(value);
+        //     }
+        // }
+
+        // PGroup.empty = new PGroup([]);
+        
+        // let a = new PGroup([]);
+        // a.add("a");
+        
+        // //let a = PGroup.empty.add("a");
+        // let ab = a.add("b");
+        // let b = ab.delete("a");
+
+        // console.log(b.has("b"));
+        // // → true
+        // console.log(a.has("b"));
+        // // → false
+        // console.log(b.has("a"));
+        // // → false
+            
+        // class MultiplicatorUnitFailure extends Error {}
+
+        // function primitiveMultiply(a, b) {
+        //     if (Math.random() < 0.2) {
+        //         return a * b;
+        //     }
+        //     else {
+        //         throw new MultiplicatorUnitFailure("Klunk");
+        //     }
+        // }
+
+        // function reliableMultiply(a, b) {
+            
+        //     for(;;){
+        //         try{
+        //             return primitiveMultiply(a, b);
+        //         }
+        //         catch(e){
+        //             if(!e instanceof MultiplicatorUnitFailure)
+        //             {
+        //                 throw e;
+        //             }
+        //         }
+        //     }
+
+        // }
+
+        // console.log(reliableMultiply(8, 8));
+
+        // const box = {
+        //     locked: true,
+        //     unlock() { this.locked = false; },
+        //     lock() { this.locked = true;  },
+        //     _content: [],
+        //     get content() {
+        //         if (this.locked) throw new Error("Locked!");
+        //         return this._content;
+        //     }
+        // };
+
+        // function withBoxUnlocked(body) {
+            
+        //     try{
+        //         box.unlock();
+        //         body();
+        //     }
+        //     finally{
+        //         box.lock();
+        //     }
+
+        // }
+
+        // withBoxUnlocked(function() {
+        //     box.content.push("gold piece");
+        // });
+
+        // try {
+        //     withBoxUnlocked(function() {
+        //         throw new Error("Pirates on the horizon! Abort!");
+        //     });
+        // }
+        // catch (e) {
+        //     console.log("Error raised:", e);
+        // }
+        // console.log(box.locked);
+        // // → true
+
+        // console.log(/abc/.test("abcde"));
+        // console.log("abcde".indexOf("abc"));
+
+        // console.log(/\d\d-\d\d-\d\d\d\d \d\d:\d\d/.test("30-01-2003 15:20"));
+            
+        // console.log(/\d{1,2}-\d{1,2}-\d{4} \d{1,2}:\d{2}/.test("10-01-2003 15:20"));
+        
+        // let match = /\d+/.exec("one tow 100");
+        // console.log(match);
+        // console.log(match.index);
+
+        // let quotedText = /'([^']*)'/;
+        // console.log(quotedText.exec("she said 'hello'"));
+
+        // console.log(new Date());
+        /**/
+        // function getDate(string) {
+
+        //     console.log(/(\d{1,2})-(\d{1,2})-(\d{4})/.exec(string));
+
+        //     let[_, day, month, year] = 
+        //         /(\d{1,2})-(\d{1,2})-(\d{4})/.exec(string);
+        //     return new Date(year, month - 1, day);
+        // }
+        
+        // console.log(getDate("21e-1-2003"));
+        // // → Thu Jan 30 2003 00:00:00 GMT+0100 (CET)
+
+        // console.log(/[\\\[.+*?(){|^$]/g.exec("dea+hl[]rd"));
+        
+        // console.log(/^abc/.exec("abc"));
+            
+        // let input = "A string with 3 numbers in it... 42 and 88.";
+        // let number = /\b\d+?\b/g;
+        // let match;
+        // while (match = number.exec(input)) {
+        //     console.log("Found", match[0], "at", match.index);
+        // }
+        
+        // console.log([1] == true);
+
+        // verify(/ca[rt]/,
+        //     ["my car", "bad cats"],
+        //     ["camper", "high art"]);
+
+        // verify(/pr?op/,
+        //     ["pop culture", "mad props"],
+        //     ["plop"]);
+
+        // verify(/ferr(et|y|ari)/,
+        //     ["ferret", "ferry", "ferrari"],
+        //     ["ferrum", "transfer A"]);
+
+        // verify(/ious\b/,
+        //     ["how delicious", "spacious room"],
+        //     ["ruinous", "consciousness"]);
+
+        // verify(/\s[.,:;]/,
+        //     ["bad punctuation ."],
+        //     ["escape the period"]);
+
+        // verify(/\w{7,}/,
+        //     ["hottentottententen"],
+        //     ["no", "hotten totten tenten"]);
+
+        // verify(/\b[^\We]+\b/,
+        //     ["red platypus", "wobbling nest"],
+        //     ["earth bed", "learning ape"]);
+
+
+        // function verify(regexp, yes, no) {
+        // // Ignore unfinished exercises
+        //     if (regexp.source == "...") return;
+        //     let ok = "ok";
+        //     for (let str of yes) if (!regexp.test(str)) {
+        //         console.log(`Failure to match '${str}'`);
+        //         ok = "nok";
+        //     }
+        //     for (let str of no) if (regexp.test(str)) {
+        //         console.log(`Unexpected match for '${str}'`);
+        //         ok = "nok";
+        //     }
+        //     console.log(ok);
+        
+        //}
+
+        // let text = "'I'm the cook,' he said, 'it's my job.'";
+        // // Change this call.
+        // let regex = /(^|\W)'|'(\W|$)/g;
+        // while(match = regex.exec(text)){
+        //     console.log(match);
+        // }
+
+        // function replaceStr(match, w1) {
+        //     if(match){
+        //         return "\"";
+        //     }
+        // }
+
+        // console.log(text.replace(/(^')|('$)|(' )|( ')/g, replaceStr));
+        // // → "I'm the cook," he said, "it's my job."
+        
+        // // floa
+        
+
+        // // Fill in this regular expression.
+        // let number = /^[+-]?[0-9]*[.]?[0-9]*$/;
+        // let number2 = /^[+-]?[0-9]*[.]?[0-9]*[+-]?[eE][0-9]+$/;
+
+        // // Tests:
+        // for (let str of ["1", "-1", "+15", "1.55", ".5", "5.",
+        //                 "1.3e2", "1E-4", "1e+12"]) {
+        // if (!number.test(str)) {
+        //     console.log(`Failed to match '${str}'`);
+        // }
+        // }
+        // for (let str of ["1a", "+-1", "1.2.3", "1+1", "1e4.5",
+        //                 ".5.", "1f5", "."]) {
+        // if (number.test(str)) {
+        //     console.log(`Incorrectly accepted '${str}'`);
+        // }
+        // }
+        
+
+        
+        // const {buildGraph} = require('./graph');
+            
+        
+        //     roads = [
+        //         "Alice's House-Bob's House",   "Alice's House-Cabin",
+        //         "Alice's House-Post Office",   "Bob's House-Town Hall",
+        //         "Daria's House-Ernie's House", "Daria's House-Town Hall",
+        //         "Ernie's House-Grete's House", "Grete's House-Farm",
+        //         "Grete's House-Shop",          "Marketplace-Farm",
+        //         "Marketplace-Post Office",     "Marketplace-Shop",
+        //         "Marketplace-Town Hall",       "Shop-Town Hall"
+        //         ];
+
+        //     return roads;
+        
+        // // function buildGraph(edges)
+        // // {
+        
+        // //     return function buildGraph(edges) {
+        // //         let graph = Object.create(null);
+        // //         function addEdge(from, to) {
+        // //             if (graph[from] == null) {
+        // //                 graph[from] = [to];
+        // //             }
+        // //             else {
+        // //                 graph[from].push(to);
+        // //             }
+        // //         }
+        // //         for (let [from, to] of edges.map(r => r.split("-"))) {
+        // //             addEdge(from, to);
+        // //             addEdge(to, from);
+        // //         }
+        // //         return graph;
+        // //     }
+        // // }
+        
+        // exports.roadGraph = buildGraph(roads);
+        
+        function Promise_all(promises) {
+            return new Promise((resolve, reject) => {
+                
+                let promiseResults = [];
+                promiseResults.length = promises.length;
+                
+                if(promises.length == 0)
+                {
+                    resolve(promiseResults)
+                }
+                
+                function nextPromise(index){ 
+                    if(index < promises.length){
+                        promises[index]
+                        .then(
+                            value => {
+                                promiseResults[index] = value;
+                                if(index + 1 == promises.length){
+                                    resolve(promiseResults)
+                                }
+                                else {      
+                                    nextPromise(index + 1);
+                                    
+                                }
+                            }
+                        ).catch(
+                            value => {
+                                reject(value);
+                            }
+                        );
+                    }
+                }
+                try{
+                    nextPromise(0);
+                }
+                catch(e){
+                    let a = 0;
+                }
+            });
+            }
+            
+            function Promise_all1(promises) {
+                return new Promise((resolve, reject) => {
+                    let results = [];
+                    let pending = promises.length;
+                    for (let i = 0; i < promises.length; i++) {
+                        promises[i].then(result => {
+                            results[i] = result;
+                            pending--;
+                            if (pending == 0) resolve(results);
+                        }).catch(reject);
+                    }
+                    if (promises.length == 0) resolve(results);
+                });
+            }
+            
+            // Test code.
+            
+            function soon(val) {
+                return new Promise(resolve => {
+                    setTimeout(() => resolve(val), Math.random() * 500);
+            });
+            }
+            
+            Promise_all([soon(1), Promise.reject("X"), soon(3)])
+            .then(array => {
+                console.log("We should not get here");
+            })
+            .catch(error => {
+                if (error != "X") {
+                console.log("Unexpected failure:", error);
+                }
+            });
+            
+            
+
+
+    </script>
+  </body>
+</html>
