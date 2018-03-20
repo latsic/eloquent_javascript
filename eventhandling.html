@@ -1,0 +1,436 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <title>eloquent javascript event handling</title>
+        <!--<link rel="stylesheet" href="styles.css"/>-->
+        <style>
+
+            .primitiveDraw {
+                height: 200px;
+                background: beige;
+                position: relative;
+                min-height: 1200px;
+            }
+            .dot {
+                height: 8px; width: 8px;
+                border-radius: 4px; /* rounds corners */
+                background: blue;
+                position: absolute;
+            }
+
+            
+            #touchDiv {
+                min-height: 400px;
+                min-width: 400px;
+                background: #0f0;
+                position: relative;
+                /*display: flex;*/
+            }
+            .touching {
+                /*position: absolute;*/
+                display: block;
+                border: 2px solid red;
+                border-radius: 50px;
+                height: 100px;
+                width: 100px;
+                /*left: 50px;*/
+                /*top: 450px;*/
+            }
+
+            #progress {
+                border-bottom: 2px solid blue;
+                width: 0;
+                position: fixed;
+                top: 0; left: 0;
+            }
+            
+            .focusDiv {
+                width: 400px;
+                height: 400px;
+                display: flex;
+                justify-content:center;
+                align-items: center;
+            }
+            .focusDiv:focus{
+                outline: 0px solid transparent;
+            }
+
+            
+
+        </style>
+    </head>
+    <body>
+        <!-- <p>Click this document to activate the handler.</p>
+        <script>
+            window.addEventListener("click", () => {
+                console.log("You knocked?");
+            })
+        </script> -->
+        <!-- <button>Click me</button>
+        <p>No handler here.</p>
+        <script>
+            let button = document.querySelector("button");
+            button.addEventListener("click", () => {
+                console.log("Button clicked.");
+            });
+        </script> -->
+        <!-- <button>Act-once button</button>
+        <script>
+            let button = document.querySelector("button");
+            function once() {
+                console.log("Done.");
+                button.removeEventListener("click", once);
+            }
+            button.addEventListener("click", once);
+        </script> -->
+
+        <!-- <button>Click me any way you want</button>
+        <script>
+            let button = document.querySelector("button");
+            button.addEventListener("mousedown", event => {
+                if(event.button == 0){
+                    console.log("Left button");
+                }
+                else if (event.button == 1) {
+                    console.log("Middle button");
+                }
+                else if (event.button == 2) {
+                    console.log("Right button");
+                }
+                console.log(event.type);
+            });
+            window.addEventListener("mousedown", () => {
+                console.log("mouse down from window handler");
+            });
+        </script> -->
+
+        <!-- <p>A paragraph with a <button>button</button>.</p>
+        <script>
+            let para = document.querySelector("p");
+            let button = document.querySelector("button");
+            para.addEventListener("mousedown", () => {
+                console.log("Handler for paragraph.");
+            });
+            button.addEventListener("mousedown", event => {
+                console.log("Handler for button.");
+                if(event.button == 2) event.stopPropagation();
+            });
+        </script> -->
+
+        <!-- <button>AAA</button>
+        <button>BBB</button>
+        <button>C</button>
+        <script>
+            document.body.addEventListener("click", event => {
+                if(event.target.nodeName == "BUTTON"){
+                    console.log("Clicked", event.target.textContent);
+                }
+            });
+        </script> -->
+
+        <!-- <a href="https://developer.mozilla.org/">MDN</a>
+        <script>
+            let link = document.querySelector("a");
+            link.addEventListener("click", event => {
+                console.log("Nope.");
+                event.preventDefault();
+            });
+        </script> -->
+
+        <!-- <p>This page turns violet when you hold the V key.</p>
+        <script>
+            window.addEventListener("keydown", event => {
+                if(event.key == "v"){
+                    document.body.style.background = "#0f0";
+                }
+            });
+            window.addEventListener("keyup", event => {
+                if(event.key == "v"){
+                    document.body.style.background = "";
+                }
+            });
+        </script> -->
+
+        <!-- <p>Press Ctrl-Space to continue.</p>
+        <script>
+            window.addEventListener("keydown", event => {
+                if(event.key == " " && event.ctrlKey){
+                    console.log("Continuing!");
+                }
+            });
+        </script> -->
+
+        <!-- <div class="primitiveDraw">
+
+            <script>
+                window.addEventListener("click", event => {
+
+                    let primDiv = document.querySelector(".primitiveDraw");
+                    console.log(primDiv.offsetLeft);
+                    let dot = document.createElement("div");
+                    dot.className = "dot";
+                    dot.style.left =  (event.pageX - 4) - primDiv.offsetLeft + "px";
+                    dot.style.top = (event.pageY - 4) -primDiv.offsetTop + "px";
+
+                    primDiv.appendChild(dot);
+                });    
+            </script>
+
+        </div> -->
+
+        <!-- <p>Drag the bar to change its width:</p>
+        <div id = "divbarmove" style="background: orange; width: 60px; height: 20px"></div>
+        <script>
+            let lastX;
+            let bar = document.querySelector("#divbarmove");
+            bar.addEventListener("mousedown", event => {
+                if(event.button == 0){
+                    lastX = event.clientX;
+                    window.addEventListener("mousemove", moved);
+                    event.preventDefault(); // Prevent selection
+                }
+            });
+
+            function moved(event){
+                if(event.buttons == 0){
+                    window.removeEventListener("mousemove", moved);
+                }
+                else{
+                    let dist = event.clientX - lastX;
+                    let newWidth = Math.max(10, bar.offsetWidth + dist);
+                    bar.style.width = newWidth + "px";
+                    lastX = event.clientX;
+                }
+            }
+
+        </script> -->
+
+        
+        <!-- <p>Touch this page</p>
+        <div id="touchDiv">
+            <div class="touching">
+            </div>
+        </div>
+        <script>
+            function update(event){
+
+                let divTouch = document.querySelector("#touchDiv");
+
+                for(let dot; dot = document.querySelector("dot");){
+                    dot.remove();
+                }
+                for(let i = 0; i < event.touches.length; i++){
+                    let {pageX, pageY} = event.touches[i];
+                    console.log(pageX, pageY);
+                    let dot = document.createElement("dot");
+                    dot.className = "touching";
+                    dot.style.left = (pageX - 50) - divTouch.offsetLeft + "px";
+                    dot.style.top = (pageY - 50) - divTouch.offsetTop + "px";
+                    console.log(dot.style.left, dot.style.top);
+                    divTouch.appendChild(dot);
+                }
+                event.preventDefault();
+            }
+            document.querySelector("#touchDiv").addEventListener("touchstart", update);
+            document.querySelector("#touchDiv").addEventListener("touchmove", update);
+            document.querySelector("#touchDiv").addEventListener("touchend", update);
+        </script> -->
+        
+
+        <!-- <div id="progress"></div>
+        <script>
+            document.body.appendChild(document.createTextNode(
+                "supercalifragilisticexpialidocious ".repeat(1000)));
+            
+            let bar = document.querySelector("#progress");
+            window.addEventListener("scroll", () =>{
+                
+                console.log("innerHeight", innerHeight);
+                console.log("scrollHeight", document.body.scrollHeight);
+                console.log("pageYOffset", pageYOffset);
+                console.log("clientHeight", document.body.clientHeight);
+
+                let max = document.body.scrollHeight - window.innerHeight;
+                bar.style.width = `${(pageYOffset / max) * 100}%`;
+                console.log("max", max);
+                console.log("01", pageYOffset / max);
+            });
+
+        </script> -->
+
+        <!-- <p>Name: <input type="text" data-help="Your full name"></p> 
+        <p>Age: <input type="text" data-help="Your age in years"></p>
+        <p id="help"></p>
+
+        <script>
+            let help = document.querySelector("#help");
+            let fields = document.querySelectorAll("input");
+            console.log(Array.from(fields).length);
+            for(let field of Array.from(fields)){
+                console.log("aha");
+                console.log(field.getAttribute("data-help"));
+                field.addEventListener("focus", event => {
+                    let text = event.target.getAttribute("data-help");
+                    console.log(text);
+                    help.textContent = text;
+                });
+                field.addEventListener("blur", event => {
+                    help.textContent = "";
+                });
+            }
+        </script> -->
+
+        <!-- <p id="worker1"></p>
+        <p id="worker2"></p>
+
+        <script>
+           
+            let squareWorkers = [new Worker("code/squareworker.js"), new Worker("code/squareworker.js")];
+            console.log("length", squareWorkers.length);
+            let i = 0;
+            for(let sw of squareWorkers) {
+                console.log("i", i);
+                sw.addEventListener("message", event => {
+                    console.log("The worker responded:", event.data);
+                    if(event.target == squareWorkers[0]) {
+                        document.querySelector("#worker1").appendChild(
+                            document.createTextNode(event.data));
+                    }
+                    else if(event.target == squareWorkers[1]) {
+                        document.querySelector("#worker2").appendChild(
+                            document.createTextNode(event.data));
+                    }
+                });
+                i++;
+            }
+            squareWorkers[0].postMessage(10);
+            squareWorkers[1].postMessage(24);
+        </script> -->
+
+        <!-- <script>
+            let ticks = 0;
+                let clock = setInterval(() => {
+                    console.log("tick", ticks++);
+                    if (ticks == 10) {
+                        clearInterval(clock);
+                        console.log("stop.");
+                    }
+                }, 2000);
+        </script> -->
+
+        <!-- <textarea>Type something here...</textarea>
+        <p id="textAreaP"></p>
+        <script>
+            let textarea = document.querySelector("textarea");
+            let timeout;
+            textarea.addEventListener("input", () =>{
+                clearTimeout(timeout);
+                timeout = setTimeout(() => {
+                    console.log("aha");
+                    let p = document.querySelector("#textAreaP");
+                    let pc = p.firstChild;
+                    if(pc) pc.remove();
+                    p.appendChild(document.createTextNode(textarea.value));
+                    console.log(textarea.textContent);
+                }, 200);
+            });
+
+        </script> -->
+
+        <!-- <script>
+            let scheduled = null;
+            window.addEventListener("mousemove", event => {
+                if (!scheduled) {
+                setTimeout(() => {
+                    document.body.textContent =
+                    `Mouse at ${scheduled.pageX}, ${scheduled.pageY}`;
+                    scheduled = null;
+                }, 2500);
+                }
+                scheduled = event;
+            });
+        </script> -->
+        
+        <div class="focusDiv">
+            <p>🎈</p>
+        </div>
+        <script>
+
+            let p = document.querySelector("p");
+            let div = document.querySelector("div");
+            p.style.fontSize = "50px";
+            p.setAttribute("tabindex", 0);
+            div.setAttribute("tabindex", 1);
+            document.querySelector("div").focus();
+            
+            let schedulingInfo = {
+                state: false,
+                timeoutFunc: null
+            };
+            let maxRepeatCycleMs = 20; 
+
+            function multiply(pxValue, factor){
+                let val = pxValue.replace("px", "");
+                val *= factor;
+                return val += "px";
+            }
+            
+            function adjustFontSize(factor){
+                console.log("adjustFontSize", factor);
+                p.style.fontSize = multiply(p.style.fontSize, factor);
+            }
+            
+            function pxValueGreaterThan(pxValue, val){
+                let fontVal = pxValue.replace("px", "");
+                return fontVal > val;
+            }
+
+            function doMaxEveryMs(time, func, schedulingInfo){
+                
+                if(!schedulingInfo.timeoutFunc){
+                    func();
+                    schedulingInfo.timeoutFunc = setTimeout(()=>{}, 0);
+                    return;
+                }
+                
+                if(!schedulingInfo.state){
+                    schedulingInfo.timeoutFunc = setTimeout(() => {
+                        func();
+                        schedulingInfo.state = false;
+                    }, time);
+                }
+                schedulingInfo.state = true;
+            }
+
+            function keyDownHandler(event){
+                console.log("keyDown");
+
+                if(event.key == "ArrowUp") {
+                    doMaxEveryMs(maxRepeatCycleMs, () => adjustFontSize(1.1), schedulingInfo);
+
+                    if(pxValueGreaterThan(p.style.fontSize, 120)){
+                        clearTimeout(schedulingInfo.timeoutFunc);
+                        p.firstChild.textContent = "💥";
+                        div.removeEventListener("keydown", keyDownHandler);
+                    }
+                }
+                else if(event.key == "ArrowDown"){
+                    doMaxEveryMs(maxRepeatCycleMs, () => adjustFontSize(0.9), schedulingInfo);                    
+                }
+            }
+
+            div.addEventListener("keydown", keyDownHandler);
+            div.addEventListener("keyup", event => {
+                if(event.key == "ArrowUp" || event.key == "ArrowDown"){
+                    clearTimeout(schedulingInfo.timeoutFunc);
+                    schedulingInfo.state = false;
+                    schedulingInfo.timeoutFunc = null;
+                }
+            });
+
+        </script>
+
+    </body>
+</html>
+

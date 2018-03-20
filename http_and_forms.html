@@ -1,0 +1,267 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <title>eloquent javascript http and forms</title>
+        
+        <!--<link rel="stylesheet" href="styles.css"/>-->
+        <style>
+
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            
+        </style>
+    </head>
+    <body>
+
+        <!-- <form method="POST" action="message.html">
+            <p>Name: <input type="text" name="name"></p>
+            <p>Message:<br><textarea name="message"></textarea></p>
+            <p><button type="submit">Send</button></p>
+        </form> -->
+
+        <!-- <p><input type="text" value="abc"> (text)</p>
+        <p><input type="password" value="abc"> (password)</p>
+        <p><input type="checkbox" checked> (checkbox)</p>
+        <p><input type="radio" value="A" name="choice">
+        <input type="radio" value="B" name="choice" checked>
+        <input type="radio" value="C" name="choice"> (radio)</p>
+        <p><input type="file"> (file)</p>
+
+        <textarea>
+            one
+            two
+            three
+        </textarea>
+
+        <select>
+            <option>Pancakes</option>
+            <option>Pudding</option>
+            <option>Ice cream</option>
+        </select> -->
+
+        <!-- <form action="example/submit.html">
+            NamDDe: <input type="text" name="name"><br>
+            Password: <input type="password" name="password"><br>
+            <button type="submit">Log in</button>
+          </form>
+
+          <script>
+            let form = document.querySelector("form");
+            console.log(form.elements[0].type);
+            // → password
+            console.log(form.elements.password.type);
+            // → password
+            console.log(form.elements.name.form == form);
+            // → true
+            </script>     
+ -->
+
+        <script>
+
+            // let fetchPromise = fetch("./test.txt",
+            //     {
+            //         mode: 'no-cors'
+            //     });
+
+            // fetchPromise.then(response => {
+            //     console.log("response.status", response.status);
+            //     console.log(
+            //             "response.headers.get(\"Content-Type\")",
+            //             response.headers.get("Content-Type"));
+            // });
+
+            // let textPromise = fetchPromise.then(response => {
+            //     return response.text();
+            // });
+            
+            // textPromise.then(text => {
+            //     console.log("text", text);
+            // });
+            
+            // let bodyPromise = fetchPromise.then(response => {
+            //     return response.body;
+            // });
+
+            // bodyPromise.then(body => {
+            //     const reader = body.getReader();
+            //     console.log("body", body);
+            // });
+
+
+        </script>
+
+        <!-- <textarea id="code">return "hi";</textarea>
+        <button id="button">Run</button>
+        <pre id="output"></pre>
+
+        <script>
+            
+            let textArea = document.querySelector("#code");
+            let button = document.querySelector("#button");
+            let pre = document.querySelector("#output");
+
+            button.addEventListener("click", () => {
+  
+                
+                try{
+                    let func = new Function(textArea.value);
+                    pre.textContent = func();
+                }
+                catch(e){
+                    pre.textContent = "Error: " + e;
+                }
+                
+            });
+            
+            
+            
+
+        </script> -->
+
+        <div id="grid"></div>
+        <button id="next">Next generation</button>
+        <div></div>
+        <button id="auto">Auto</button>
+
+        <script>
+        
+        let rows = 10;
+        let cols = 10;
+
+        class Grid{
+            constructor(cols, rows){
+                this.cols = cols;
+                this.rows = rows;
+                this.liveCells = [];
+
+                for(let y = 0; y < this.rows; y++){
+                    for(let x = 0; x < this.cols; x++){
+                        if(Math.random() > 0.5){
+                            this.liveCells.push({x, y});
+                        }
+                    }
+                }
+            }
+
+            isLive(xx, yy){
+
+                return this.liveCells.some(({x, y}) => (xx == x && yy == y));
+            }
+
+            toggle(x, y){
+                if(this.isLive(x, y)){
+                    this.liveCells = this.liveCells.filter(
+                        (a) => a.x != x && a.y != y);
+                }
+                else{
+                    this.liveCells.push({x, y});
+                }
+            }
+
+            next(){
+
+                let liveCells = [];
+                for(let y = 0; y < this.rows; y++){
+                    for(let x = 0; x < this.cols; x++){
+                        
+                        let count = 0;
+                        for(let i = -1; i <= 1; i++){
+                            for(let j = -1; j <= 1; j++){
+                                if(i == 0 && j == 0){
+                                    continue;
+                                }
+                                
+                                let xx = x + j;
+                                let yy = y + i;
+                                
+                                if(xx >= 0 && xx < this.rows &&
+                                   yy >= 0 && yy < this.cols){
+                                    
+                                    if(this.isLive(xx, yy)){
+                                        count++;
+                                    }
+                                }
+                            }
+                        }
+
+
+                        if(count == 3){
+                            liveCells.push({x, y});
+                        }
+                        else if(count == 2){
+
+                            if(this.isLive(x, y)){
+                                liveCells.push({x, y});
+                            }
+                        }
+                    }
+                }
+
+                return liveCells;
+            }
+        }
+        
+        
+        function drawGrid(grid){
+            let domGrid = document.querySelector("#grid");
+            for(let child of Array.from(domGrid.children)){
+                domGrid.removeChild(child);
+            }
+            
+            let table = document.createElement("table");
+            domGrid.appendChild(table);
+            for(let y = 0; y < grid.rows; y++){
+                
+                let row = document.createElement("tr");
+                table.appendChild(row);
+                for(let x = 0; x < grid.cols; x++){
+                    let cell = document.createElement("td");
+                    row.appendChild(cell);
+
+                    let checkbox = document.createElement("input");
+                    checkbox.type = "Checkbox";
+                    checkbox.checked = grid.isLive(x, y);
+
+                    cell.appendChild(checkbox);
+
+                     checkbox.addEventListener("click", () => {
+                         grid.toggle(x, y);
+                     });
+                }
+            }
+        }
+
+       
+        
+        let grid = new Grid(30, 30);
+        drawGrid(grid);
+
+        document.querySelector("#next").addEventListener("click", () => {
+            grid.liveCells = grid.next();
+            drawGrid(grid);
+        });
+        
+        let intervalFunc = null;
+        document.querySelector("#auto").addEventListener("click", () => {
+            
+            if(intervalFunc != null){
+                clearInterval(intervalFunc);
+                intervalFunc = null;
+            }
+            else{
+                intervalFunc = setInterval(() => {
+                    grid.liveCells = grid.next();
+                    drawGrid(grid);
+                }, 500);
+            }
+        });
+
+        </script>
+
+
+    </body>
+</html>

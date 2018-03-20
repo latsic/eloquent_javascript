@@ -1,0 +1,120 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <title>eloquent javascript event handling exercise 1</title>
+        <!--<link rel="stylesheet" href="styles.css"/>-->
+        <style>
+
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            .focusDiv {
+                display: flex;
+                justify-content:center;
+                align-items: center;
+                outline: 0px solid transparent;
+            }
+            .focusDiv:focus{
+                outline: 0px solid transparent;                
+            }
+            page{
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+            }
+        </style>
+    </head>
+    <body>
+        <page>
+            <div class="focusDiv">
+                <p>""</p>
+            </div>
+        </page>
+        <script>
+
+            let schedulingInfo = {
+                state: false,
+                timeoutFunc: null
+            };
+            let maxRepeatCycleMs = 50;
+            let initialFontSize = "50px";
+            let maxFontSize = "200px";
+            let initalChar = "a";
+            let endChar = "💥";
+
+            let p = document.querySelector("p");
+            p.firstChild.textContent = initalChar;
+            let div = document.querySelector(".focusDiv");
+            p.style.fontSize = initialFontSize;
+            div.setAttribute("tabindex", 0);
+            document.querySelector(".focusDiv").focus();
+            div.style.width = maxFontSize;
+            div.style.height = maxFontSize;
+
+            function multiply(pxValue, factor){
+                let val = pxValue.replace("px", "");
+                val *= factor;
+                return val += "px";
+            }
+            
+            function adjustFontSize(factor){
+                console.log("adjustFontSize", factor);
+                p.style.fontSize = multiply(p.style.fontSize, factor);
+            }
+            
+            function pxValueGreaterThan(pxValue, val){
+                let fontVal = pxValue.replace("px", "");
+                return fontVal > val;
+            }
+
+            function doMaxEveryMs(time, func, schedulingInfo){
+                
+                if(!schedulingInfo.timeoutFunc){
+                    func();
+                    schedulingInfo.timeoutFunc = setTimeout(()=>{}, 0);
+                    return;
+                }
+                
+                if(!schedulingInfo.state){
+                    schedulingInfo.timeoutFunc = setTimeout(() => {
+                        func();
+                        schedulingInfo.state = false;
+                    }, time);
+                }
+                schedulingInfo.state = true;
+            }
+
+            function keyDownHandler(event){
+                console.log("keyDown");
+
+                if(event.key == "ArrowUp") {
+                    doMaxEveryMs(maxRepeatCycleMs, () => adjustFontSize(1.1), schedulingInfo);
+
+                    if(pxValueGreaterThan(p.style.fontSize, 120)){
+                        clearTimeout(schedulingInfo.timeoutFunc);
+                        p.firstChild.textContent = endChar;
+                        div.removeEventListener("keydown", keyDownHandler);
+                    }
+                }
+                else if(event.key == "ArrowDown"){
+                    doMaxEveryMs(maxRepeatCycleMs, () => adjustFontSize(0.9), schedulingInfo);                    
+                }
+            }
+
+            div.addEventListener("keydown", keyDownHandler);
+            div.addEventListener("keyup", event => {
+                if(event.key == "ArrowUp" || event.key == "ArrowDown"){
+                    clearTimeout(schedulingInfo.timeoutFunc);
+                    schedulingInfo.state = false;
+                    schedulingInfo.timeoutFunc = null;
+                }
+            });
+
+        </script>
+    </body>
+</html>

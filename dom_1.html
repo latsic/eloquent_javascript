@@ -1,0 +1,61 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <title="eloquent javascript übung 1"/>
+    </head>
+    <body>
+        <h1>Mountains</h1>
+        <div id="mountains"></div>
+
+        <script>
+            const MOUNTAINS = [
+                {name: "Kilimanjaro", height: 5895, place: "Tanzania"},
+                {name: "Everest", height: 8848, place: "Nepal"},
+                {name: "Mount Fuji", height: 3776, place: "Japan"},
+                {name: "Vaalserberg", height: 323, place: "Netherlands"},
+                {name: "Denali", height: 6168, place: "United States"},
+                {name: "Popocatepetl", height: 5465, place: "Mexico"},
+                {name: "Mont Blanc", height: 4808, place: "Italy/France"}
+            ];
+            
+            let mountains = document.querySelector("#mountains");
+            
+            let table = document.createElement("table");
+            mountains.appendChild(table);
+
+            let tableHR = document.createElement("tr");
+            table.appendChild(tableHR);            
+            
+            for(let key of Object.keys(MOUNTAINS[0])){                
+                let hElem = document.createElement("th");
+                hElem.appendChild(document.createTextNode(key));
+                tableHR.appendChild(hElem);
+            }
+
+            for(let mountain of MOUNTAINS){ 
+                let tableR = document.createElement("tr");
+                table.appendChild(tableR);               
+                for(let prop of Object.values(mountain))                {
+                    
+                    let tableTd = document.createElement("td");
+                    let tableTdText = document.createTextNode(prop);
+
+                    tableTd.appendChild(tableTdText);
+                    tableR.appendChild(tableTd);
+                }
+            }
+
+            let tds = document.querySelectorAll("td");
+            for(let td of Array.from(tds)){
+                if(td.textContent){
+                    if(/^\d+$/.test(td.textContent)){
+                        td.style.textAlign = "right";
+                    }
+                }
+            }
+            
+        </script>
+
+    </body>
+</html>

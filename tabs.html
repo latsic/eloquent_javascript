@@ -1,0 +1,115 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <title>eloquent javascript event handling exercise 2</title>
+        <script src="../../js/doMaxEveryMs.js"></script>
+        <!--<link rel="stylesheet" href="styles.css"/>-->
+        <style>
+
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            
+            button {
+                width: 100px;
+                height: 50px;
+                background: brown;
+            }
+
+        </style>
+    </head>
+    <body>
+        
+        <tab-panel>
+            <div data-tabname="one">Tab one</div>
+            <div data-tabname="two">Tab two</div>
+            <div data-tabname="three">Tab three</div>
+        </tab-panel>
+
+        <script>
+            function asTabs(node) {
+
+                let tabs = Array.from(node.children).map(node => {
+                    let button = document.createElement("button");
+                    button.textContent = node.getAttribute("data-tabname");
+                    let tab = {node , button};
+                    button.addEventListener("click", () => selectTab(tab));
+                    return tab;
+                });
+
+                let tabList = document.createElement("div");
+                for(let {button} of tabs){
+                    tabList.appendChild(button);
+                }
+                node.insertBefore(tabList, node.firstChild);
+
+                function selectTab(selectedTab){
+                    for (let tab of tabs) {
+                        let selected = tab == selectedTab;
+                        tab.node.style.display = selected ? "" : "none";
+                        tab.button.style.color = selected ? "red" : "";
+                    }
+                }
+                selectTab(tabs[0]);
+
+
+                // let tabs = document.querySelectorAll("div");
+                // let buttons = [];
+                // let first = true;
+                // let divs = [];
+                // let i = 0;
+                // for(let elem of Array.from(tabs)){
+                    
+                //     divs[i] = elem;
+                //     buttons[i] = document.createElement("button");
+
+                //     buttons[i].appendChild(
+                //         document.createTextNode(divs[i].getAttribute("data-tabname")));
+                    
+                //     node.insertBefore(buttons[i], divs[0]);
+
+                //     if(!first){
+                //         elem.style.display = "none";
+                //         buttons[i].style.background = "brown"
+                //     }
+                //     else{
+                //         buttons[i].style.background = "red"
+                //     }
+                //     first = false;
+                //     ++i;
+                // }
+
+                // document.addEventListener("click", event => {
+                    
+                //     // check if any button has been clicked
+                //     let clickedButton = null;
+                //     for(let button of buttons){
+                //         if(event.target == button){
+                //             clickedButton = button;
+                //         }
+                //     }
+                //     if(clickedButton){
+                //         let i = 0;
+                //         for(let button of buttons){
+                //             if(clickedButton == button){
+                //                 divs[i].style.display = "block";
+                //                 button.style.background = "red"
+                //             }
+                //             else{
+                //                 divs[i].style.display = "none";
+                //                 button.style.background = "brown"
+                //             }
+                //             i++;
+                //         }
+                //     }
+                // });
+
+                // Your code here.
+            }
+            asTabs(document.querySelector("tab-panel"));
+        </script>
+    </body>
+</html>

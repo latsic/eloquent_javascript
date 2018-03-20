@@ -1,0 +1,88 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <title>eloquent javascript event handling exercise 2</title>
+        <script src="../../js/doMaxEveryMs.js"></script>
+        <!--<link rel="stylesheet" href="styles.css"/>-->
+        <style>
+
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            .trail { /* className for the trail elements */
+                position: absolute;
+                height: 6px; width: 6px;
+                border-radius: 3px;
+                background: teal;
+            }
+            body {
+                height: 300px;
+            }
+
+        </style>
+    </head>
+    <body>
+        
+        <script>
+            let body = document.querySelector("body");
+            let divs = [];
+            let num = 50;
+            for(let i = 0; i < num; i++){
+                divs[i] = {div: document.createElement("div"), x: i * 6, y: i * 0};
+                divs[i].div.classList.add("trail");
+                divs[i].div.style.left = divs[i].x + "px";
+                divs[i].div.style.top = divs[i].y + "px";
+                body.appendChild(divs[i].div);
+
+                
+            }
+            
+            let schedulingInfo = {
+                state: false,
+                timeoutFunc: null,
+                preventImediateExecution: false
+            };
+            let schedulingInfos = [];
+            for(let div of divs){
+                schedulingInfos.push(Object.create(schedulingInfo));
+            }
+            
+
+            body.addEventListener("mousemove", event => {
+
+                console.log("mousemove");
+                
+
+                function updateOne(i){
+                    setTimeout(() => {
+                        
+                        if(i < num){
+
+                            let div = divs[i];
+
+                            div.div.style.left = event.pageX/* + div.x */+ "px";
+                            div.div.style.top = event.pageY/* + div.y */+ "px";
+                            updateOne(i + 1);
+                        }
+                    }, 5);
+                }
+
+
+                //doMaxEveryMs(1, () =>{
+                    
+                    console.log("mousemove2");
+
+                    if(event.buttons == 1){
+                        updateOne(0);                        
+                    }
+                    
+                //}, schedulingInfo); 
+            });
+
+        </script>
+    </body>
+</html>
