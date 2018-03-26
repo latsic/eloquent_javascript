@@ -1,0 +1,21 @@
+{
+  "name": "fileserver_latisc",
+  "version": "1.0.0",
+  "description": "a very simple fileserver by eloquent javascript book",
+  "main": "server.js",
+  "dependencies": {
+    "mime": "^2.2.0",
+    "mz": "^2.7.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [
+    "file",
+    "server"
+  ],
+  "author": "latsic",
+  "license": "ISC"
+}
