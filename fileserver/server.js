@@ -1,3 +1,4 @@
+
 const {createServer} = require("http");
 const {parse} = require("url");
 const {resolve} = require("path");
@@ -7,35 +8,98 @@ const {createReadStream, mkdirSync, createWriteStream,
 const {stat, readdir, unlink} = require("mz/fs");
 const mime = require("mime");
 
-let baseDirectory = process.cwd();
-let baseDirectoryGet = baseDirectory;
-const methods = Object.create(null);
+class PageEditorSettings{
+    constructor(){
+        this.path = "." + sep + "page_editor" + sep;
+        this.pathTemplatePages = this.path + "template_page" + sep;
+        this.pathUserPages = this.path + "user_pages" + sep;
 
-if(process.argv.length >= 3){
-    if(/.*\.\..*/.test(process.argv[2])){
-        console.log("relative root directory may not contain parent path elements.")
+        this.templatePageHtml = "start.html";
+        this.templatePageCss = "start.css";
+        this.templatePageJs = "start.js";
+
+        this.RestoreCmd = "pageEditor_restore";
+        this.CreateCmd = "pageEditor_create";
     }
-    else{
-        baseDirectory += sep + process.argv[2];
+    get getPath() { return this.path; }
+    get getPathTemplatePages() { return this.pathTemplatePages; }
+    get getPathUserPages() { return this.pathUserPages };
+    get getTemplatePageHtml() { return this.templatePageHtml; }
+    get getTemplatePageCss() { return this.templatePageCss; }
+    get getTemplatePageJs() { return this.templatePageJs; }
+    get getRestoreCmd() { return this.RestoreCmd; }
+    get getCreateCmd() { return this.CreateCmd; }
+}
+
+
+class ServerSettings{
+    constructor(){
+        this.baseDirectory = process.cwd();
+        this.baseDirectoryModify = this.baseDirectory;
+        this.error = false;
+        this.errorReason = "";
+
+        if(process.argv.length >= 3){
+            if(/.*\.\..*/.test(process.argv[2])){
+                this.errorReason = "relative root directory may not contain parent path elements.";
+                this.error = true;
+            }
+            else{
+                this.baseDirectoryModify += sep + process.argv[2];
+            }
+        }
+    }
+    get getBaseDir() {
+        return this.baseDirectory;
+    }
+    get getBaseDirModify() {
+        return this.baseDirectoryModify;
+    }
+    get hasError() {
+        return this.error;
+    }
+    get getErrorReason() {
+        return this.errorReason;
     }
 }
 
+let srvSettings = new ServerSettings();
+if(srvSettings.hasError) {
+    console.log("Error", srvSettings.getErrorReason);
+}
+let pgEdtiorSettings = new PageEditorSettings();
+const methods = Object.create(null);
+
+createServer((request, response) => {
+    logRequestInfo(request);
+    let handler = methods[request.method] || notAllowed;
+    handler(request)
+        .catch(error => {
+            console.log("error: ", error);
+            console.log("catch handler called");
+            if(error.status != null) return error;
+            return {body: String(error), status: 500};
+        })
+        .then(responseInfo => {handleResponseInfo(responseInfo, response)});
+}).listen(8000);
+
+
 function copyFile(src, dest) {
+
+    console.log("copyFile Src: ", src);
+    console.log("copyFile Dst: ", dest);
 
     return new Promise((resolve, reject) => {
 
         let readStream = createReadStream(src);
-    
-        readStream.once("error", (err) => {
-            console.log(err);
+        readStream.once("error", (error) => {
+            console.log(error);
             reject(error);
         });
-    
         readStream.once("end", () => {
             console.log('done copying');
             resolve();
         });
-    
         readStream.pipe(createWriteStream(dest));
     });
 }
@@ -56,18 +120,6 @@ function logRequestInfo(request){
     console.log("requestUrl: ", request.url);
 }
 
-createServer((request, response) => {
-    logRequestInfo(request);
-    let handler = methods[request.method] || notAllowed;
-    handler(request)
-        .catch(error => {
-            console.log("catch handler called");
-            if(error.status != null) return error;
-            return {body: String(error), status: 500};
-        })
-        .then(responseInfo => {handleResponseInfo(responseInfo, response)});
-}).listen(8000);
-
 async function notAllowed(request) {
     console.log("notAllowed called")
     return {
@@ -76,18 +128,15 @@ async function notAllowed(request) {
     };
 }
 
-function urlPath(url, baseDirectory){
+function urlPath(url, allowedRootDir){
     console.log("function call: ", "urlPath");
-    console.log("baseDirectory: ", baseDirectory);
     let {pathname} = parse(url);
     let path = resolve(
-        baseDirectory,
+        srvSettings.getBaseDir,
         decodeURIComponent(pathname).slice(1));
 
-    console.log("path: ", path);
-
-    if(path != baseDirectory && 
-        !path.startsWith(baseDirectory + sep)){
+    if(path != allowedRootDir && 
+        !path.startsWith(allowedRootDir + sep)){
         console.log("forbidden request");
         throw {status: 403, body: "Forbidden"};
     }
@@ -96,7 +145,7 @@ function urlPath(url, baseDirectory){
 
 methods.GET = async function(request){
     console.log("function call: ", "GET");
-    let path = urlPath(request.url, baseDirectoryGet);
+    let path = urlPath(request.url, srvSettings.getBaseDir);
     let stats;
     try {
         stats = await stat(path);
@@ -116,7 +165,7 @@ methods.GET = async function(request){
 
 methods.DELETE = async function(request){
     console.log("function call: ", "DELETE");
-    let path = urlPath(request.url, baseDirectory);
+    let path = urlPath(request.url, srvSettings.getBaseDirModify);
     let stats;
     try{
         stats = await stat(path);
@@ -140,109 +189,132 @@ function replaceStrInFile(filePath, from, to) {
     let fileContent = readFileSync(filePath, "utf8");
     fileContent = fileContent.replace(from, to);
     writeFileSync(filePath, fileContent);
-   
+}
+
+async function pageEditorRestore(path) {
+
+    console.log("function call: ", "pageEditorRestore");
+
+    let promises = [
+        copyFile(
+            pgEdtiorSettings.getPathTemplatePages + pgEdtiorSettings.getTemplatePageHtml,
+            pgEdtiorSettings.getPathUserPages + pgEdtiorSettings.getTemplatePageHtml),
+        copyFile(
+            pgEdtiorSettings.getPathTemplatePages + pgEdtiorSettings.getTemplatePageCss,
+            pgEdtiorSettings.getPathUserPages + pgEdtiorSettings.getTemplatePageCss),
+        copyFile(
+            pgEdtiorSettings.getPathTemplatePages + pgEdtiorSettings.getTemplatePageJs,
+            pgEdtiorSettings.getPathUserPages + pgEdtiorSettings.getTemplatePageJs)
+    ];
+
+    await Promise.all(promises);
+    
+    return { 
+        body: createReadStream(path),
+        type: mime.getType(path)
+    };
+}
+
+async function pageEditorCreate(path, pageName) {
+
+    let stats;
+    let noStatsError = true;
+    try {
+        stats = statSync(path);
+    }
+    catch(error) {
+        noStatsError = false;
+        if(error.code != "ENOENT") {
+            throw error;
+        }
+    }
+    if(noStatsError) {
+        return {
+            status: 409,
+            body: `conflict, the page ${pageName} already exists`
+        };
+    }
+    
+    let promises = [
+        copyFile(
+            pgEdtiorSettings.getPathTemplatePages + pgEdtiorSettings.getTemplatePageHtml,
+            pgEdtiorSettings.getPathUserPages + pageName + ".html"),
+        copyFile(
+            pgEdtiorSettings.getPathTemplatePages + pgEdtiorSettings.getTemplatePageCss,
+            pgEdtiorSettings.getPathUserPages + pageName + ".css"),
+        copyFile(
+            pgEdtiorSettings.getPathTemplatePages + pgEdtiorSettings.getTemplatePageJs,
+            pgEdtiorSettings.getPathUserPages + pageName + ".js")
+    ];
+        
+    await Promise.all(promises);
+    console.log("pageEditorCreate: ", "promises resolved");
+
+    replaceStrInFile(
+        pgEdtiorSettings.getPathUserPages + pageName + ".html",
+        pgEdtiorSettings.getTemplatePageCss,
+        pageName + ".css");
+    replaceStrInFile(
+        pgEdtiorSettings.getPathUserPages + pageName + ".html",
+        pgEdtiorSettings.getTemplatePageJs,
+        pageName + ".js");
+
+    return {
+        body: createReadStream(path),
+        type: mime.getType(path)
+    };
+}
+
+async function evalPostRequest(path, requestBody) {
+
+    console.log("function call: ", "evalPostRequest");
+
+    let match;
+    if(new RegExp(`^${pgEdtiorSettings.getRestoreCmd}$`).test(requestBody)){
+        return await pageEditorRestore(path);
+    }
+    else if(match = new RegExp(`^${pgEdtiorSettings.getCreateCmd}=(.+)$`).exec(requestBody)){
+        console.log("match0", match[0]);
+        console.log("match1", match[1]);
+        let pageName = match[1];
+        return await pageEditorCreate(path, pageName);
+    }
+    else
+    {
+        return {
+            status: 400,
+            body: `bad request ${requestBody}`
+        };
+    }
 }
 
 methods.POST = async function(request){
     
-    let path = urlPath(request.url, baseDirectory);
+    let path = urlPath(request.url, srvSettings.getBaseDirModify);
 
-    let requestData = "";
+    let requestBody = "";
     request.on("data", chunk => {
-        requestData += chunk.toString();
+        requestBody += chunk.toString();
     });
-    let promises = [];
-    let p1, p2, p3;
 
-    let pageName = "";
-
-    let p = new Promise((resolve, reject) => {
-
+    let promiseStream = new Promise((resolve, reject) => {
         request.on("end", () => {
-
-            console.log("Post request data: ", requestData);
-
-            if(/^restore$/.test(requestData)){
-                p1 = copyFile(
-                    "./template_page" + sep + "start.html",
-                    "./user_pages" + sep + "start.html");
-                p2 = copyFile(
-                    "./template_page" + sep + "start.css",
-                    "./user_pages" + sep + "start.css");
-                p3 = copyFile(
-                    "./template_page" + sep + "start.js",
-                    "./user_pages" + sep + "start.js");
-                
-
-                promises.push(p1, p2, p3);
-                resolve(promises);
-            }
-            else if(/^create=(.+)$/.test(requestData)){
-                pageName = /^create=(.+)$/.exec(requestData)[1];
-
-                let stats;
-                let noStatsError = true;
-                try {
-                    stats = statSync(path);
-                }
-                catch(error){
-                    noStatsError = false;
-                    if (error.code == "ENOENT"){
-                        p1 = copyFile(
-                            "./template_page" + sep + "start.html",
-                            "./user_pages" + sep + pageName + ".html");
-                        p2 = copyFile(
-                            "./template_page" + sep + "start.css",
-                            "./user_pages" + sep + pageName + ".css");
-                        p3 = copyFile(
-                            "./template_page" + sep + "start.js",
-                            "./user_pages" + sep + pageName + ".js");
-        
-                        promises.push(p1, p2, p3);
-                        resolve(promises);
-                    }
-                    else{
-                        throw error;
-                    }                   
-                }
-                if(noStatsError)
-                {
-                    return {status: 409, body: `conflict, the page ${pageName} already exists`};
-                }
-            }
-            else{
-                return {status: 400, body: `bad request ${requestData}`}
-            }
+            resolve(requestBody);
         });
+        request.on("error", error => reject(error));
     });
-    await p;
-    await Promise.all(promises);
 
-    if(pageName){
-        try
-        {
-            replaceStrInFile(
-                "./user_pages" + sep + pageName + ".html", 
-                "start.css",
-                pageName + ".css");
-            replaceStrInFile(
-                "./user_pages" + sep + pageName + ".html", 
-                "start.js",
-                pageName + ".js");
-        }
-        catch(error){
-            return {status: 500, body: error.toString()};
-        }
-    }
+    await promiseStream;
+    let postResult = await evalPostRequest(path, requestBody);
 
-    console.log("Post path:", path);
-    return {body: createReadStream(path),
-            type: mime.getType(path)};
+    console.log("promiseStream awaited");
+    console.log("postResult: ", postResult);
+    return postResult;
 }
 
 methods.MKCOL = async function(request){
     console.log("function call: ", "MKCOL");
-    let path = urlPath(request.url, baseDirectory);
+    let path = urlPath(request.url, srvSettings.getBaseDirModify);
     let stats;
     let exists = true;
     try{
@@ -282,7 +354,7 @@ function pipeStream(from, to){
 
 methods.PUT = async function(request){
     console.log("function call: ", "PUT");
-    let path = urlPath(request.url, baseDirectory);
+    let path = urlPath(request.url, srvSettings.getBaseDirModify);
     await pipeStream(request, createWriteStream(path));
     return {status: 204};
 }

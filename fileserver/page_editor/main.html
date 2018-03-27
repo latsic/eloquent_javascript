@@ -87,7 +87,7 @@
                     three text areas, where you can edit the page you are currently
                     viewing. One text-area is for the html, another for css and the
                     third for the javascript. The above link brings you to a template
-                    page where you can start editing the html, css or javascripts. You
+                    page where you can start editing the html, css or javascript. You
                     can add new pages as well. Because with this editor you change the
                     page you are currently viewing, you can easily break the page. In
                     case you are not longer able to use the editing tools please use this
@@ -98,22 +98,28 @@
         </page>
 
         <script>
-            let restorePath = "/user_pages/start.html";
+            let restorePath = "/page_editor/user_pages/start.html";
             document.querySelector(".button-restore")
                 .addEventListener("click", () => {
                     fetch(
                         restorePath, 
                         { method: "POST",
-                          body: "restore",
+                          body: "pageEditor_restore",
                           header: new Headers(
                             {
                                 "Content-Type": "text/plain"
                             })
-                        }).then(response => response.text())
-                        .then(text => {
+                        }).then(response => {
+                            if(response.status == 200) response.text();
+                            else{
+                                throw new Error(
+                                    `There was an error while trying to 
+                                    restore, http status ${response.status}`);
+                            }
+                        }).then(text => {
                             console.log("success");
                             sessionStorage.setItem("state.currentPage", "start");
-                            window.location.href  = restorePath;
+                            window.location.assign(restorePath);
                         })
                         .catch(error => console.log("Error", error));
                 });

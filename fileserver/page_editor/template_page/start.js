@@ -32,7 +32,7 @@ function getStringVal(fileType){
 /**
  * @const {String} basePath The relative path where the pages must live. 
  */
-const basePath = "/user_pages";
+const basePath = "/page_editor/user_pages";
 
 /**
  * @name state
@@ -183,7 +183,8 @@ function fillPageContent(pageName)
 
 fillPageContent(getState().currentPage);
 
-
+// Saves the changes by the user on the server and refreshes the
+// page in order for the user to see them.
 document.querySelector(".button-save").addEventListener("click", () => {
 
     let textAreaHtml = document.querySelector("#editor-html");
@@ -235,6 +236,7 @@ document.querySelector(".button-save").addEventListener("click", () => {
     }
 });
 
+// Displays another page as requested by the user.
 document.querySelector(".select-page").addEventListener("change", () => {
 
     let select = document.querySelector(".select-page");
@@ -248,6 +250,8 @@ document.querySelector(".select-page").addEventListener("change", () => {
     loadPage(path);
 });
 
+// Adds a new page as requested by the user. The new page is
+// a copy of the template page.
 document.querySelector(".add-page").addEventListener("click", () => {
 
     let textField = document.querySelector(".add-page-text");
@@ -258,13 +262,18 @@ document.querySelector(".add-page").addEventListener("click", () => {
     fetch(
         newPath, 
         { method: "POST",
-          body: `create=${pageName}`,
+          body: `pageEditor_create=${pageName}`,
           header: new Headers(
             {
                 "Content-Type": "text/plain",
                 "Cache-Control": "no-cache"
             })
-        }).then(response => response.text())
+        }).then(response => {
+            if(response.status != 200){
+                throw new Error(`Failed to add page, http status ${response.status}.`);
+            }
+            response.text();
+        })
         .then(text => {
             setState({currentPage: pageName});
             loadPage(newPath);
