@@ -2,6 +2,12 @@
 	"folders": [
 		{
 			"path": "."
+		},
+		{
+			"path": "C:\\Data\\webdev\\projects\\page_editor"
+		},
+		{
+			"path": "C:\\Data\\webdev\\projects\\talks_board"
 		}
 	],
 	"settings": {}
